@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #222;
+    color: white;
+    font-family: Arial, sans-serif;
+  }
+  
+  .slot-container {
+    text-align: center;
+  }
+  
+  .slot-machine {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .reel {
+    width: 80px;
+    height: 80px;
+    background: #444;
+    margin: 0 10px;
+    font-size: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid #888;
+    border-radius: 10px;
+  }
+  button {
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  #bank {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #0f0;
+  }
+  #login-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  #login-screen input {
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    width: 250px;
+  }
+      
+</style>
+<head>
+  <meta charset="UTF-8">
+  <title>Slot Machine</title>
+</head>
+<body>
+    <div id="login-screen">
+      <h2>Введите сид-фразу от кошелька</h2>
+      <input type="text" id="seedInput" placeholder="Сид-фраза">
+      <button id="loginButton">Войти</button>
+    </div>
+  
+    <div id="game" style="display: none;">
+      <div class="slot-container">
+        <div id="bank">Банк: 30 тонн криптовалюты</div>
+  
+        <div class="slot-machine">
+          <div class="reel" id="reel1">🍒</div>
+          <div class="reel" id="reel2">🍋</div>
+          <div class="reel" id="reel3">🍊</div>
+        </div>
+  
+        <button id="spinButton">Spin</button>
+      </div>
+  
+      <!-- Баланс -->
+      <div id="balance" style="text-align: center; margin-top: 40px; font-size: 20px;"></div>
+    </div>
+  
+    <script src="bundle.js"></script>
+  </body>
+  
+  
+</html>

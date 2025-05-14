@@ -1,0 +1,57 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #222;
+    color: white;
+    font-family: Arial, sans-serif;
+  }
+  
+  .slot-container {
+    text-align: center;
+  }
+  
+  .slot-machine {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .reel {
+    width: 80px;
+    height: 80px;
+    background: #444;
+    margin: 0 10px;
+    font-size: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid #888;
+    border-radius: 10px;
+  }
+  button {
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  #bank {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #0f0;
+  }
+  #login-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  #login-screen input {
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    width: 250px;
+  }
+      

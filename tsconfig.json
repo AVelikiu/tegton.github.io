@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+      "target": "es6",
+      "module": "esnext",
+      "moduleResolution": "node",
+      "esModuleInterop": true,
+      "strict": true,
+      "outDir": "./dist"
+    },
+    "include": ["src/app.ts"]
+  }
+  
