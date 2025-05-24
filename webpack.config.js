@@ -33,7 +33,7 @@ module.exports = {
       Buffer: ["buffer", "Buffer"],
     }),
     new HtmlWebpackPlugin({
-      template: "./src/vie.html",
+      template: "./index.html",
     }),
   ],
   mode: "development",
