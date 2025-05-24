@@ -1,94 +1,381 @@
 <!DOCTYPE html>
 <html lang="en">
-<style>
-  body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: #222;
-    color: white;
-    font-family: Arial, sans-serif;
-  }
-  
-  .slot-container {
-    text-align: center;
-  }
-  
-  .slot-machine {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-  
-  .reel {
-    width: 80px;
-    height: 80px;
-    background: #444;
-    margin: 0 10px;
-    font-size: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 4px solid #888;
-    border-radius: 10px;
-  }
-  button {
-    padding: 10px 20px;
-    font-size: 18px;
-    cursor: pointer;
-  }
-  #bank {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #0f0;
-  }
-  #login-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-  }
-  
-  #login-screen input {
-    padding: 10px;
-    font-size: 16px;
-    margin-bottom: 10px;
-    width: 250px;
-  }
-      
-</style>
 <head>
-  <meta charset="UTF-8">
-  <title>Slot Machine</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="styles.css" />
+  <title>TON Wallet Balance Checker</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+       margin: 0;
+      background-image: url("https://i.ibb.co/TMSvTXh3/photo-2025-05-21-00-12-36.jpg");
+      color: #333;
+    }
+    textarea, input[type="text"] {
+      width: 95%;
+      padding: 7px;
+      font-size: 16px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 8px;
+      background-color: #e9a21f;
+      color: white;
+      cursor: pointer;
+    }
+      button:hover {
+      background-color: #ad7610;
+    }
+    #walletInfo, #transactionInfo {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #f5f5f5;
+      border-radius: 4px;
+      word-break: break-word;
+    }
+    .error {
+      color: red;
+    }
+    .loading {
+      display: none;
+      margin-top: 15px;
+    }
+    .nft-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #f0f0f0;
+      border-radius: 6px;
+      padding: 10px;
+      margin: 10px;
+      width: 200px;
+    }
+    .nft-card img {
+      max-width: 100%;
+      border-radius: 4px;
+    }
+    .nft-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .nft-grid img{
+      width: 150px;
+      height: 150px;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    #modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    #modal-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 500px;
+      text-align: center;
+      position: relative;
+    }
+
+    #modal-content img {
+      max-width: 100%;
+      border-radius: 8px;
+    }
+
+    #modal-content h2 {
+      margin: 10px 0;
+    }
+
+    #modal-content p {
+      font-size: 14px;
+      color: #444;
+    }
+
+    #modal-close {
+      position: absolute;
+      top: 10px; right: 15px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .tab-button {
+      background-color: #D0D0D0;
+      color: #555;
+      font-weight: normal;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      cursor: pointer;
+    }
+
+    .tab-button.active {
+      background-color: white;
+      color: black;
+      font-weight: bold;
+    }
+
+.address-popup {
+  display: none;
+  position: fixed;
+  bottom: -600px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 340px;
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.3);
+  transition: bottom 0.4s ease-out;
+  z-index: 1001;
+  text-align: center;
+  min-height: 500px; /* в 2 раза выше */
+}
+
+.address-popup.show {
+  display: block;
+  bottom: 0;
+}
+
+.qr-card {
+  background: white;
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.qr-container {
+  display: flex;
+  justify-content: center;
+}
+
+.qr-text {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #444;
+  line-height: 1.4;
+}
+
+.address-card {
+  background: white;
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.address-label {
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+.address-text {
+  font-family: monospace;
+  font-size: 14px;
+  word-break: break-all;
+  margin-bottom: 12px;
+}
+
+.copy-button {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+
+
+
+  </style>
 </head>
+
+<div id="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+  background-color:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000;">
+  <div style="background:white; padding:20px; border-radius:8px; max-width:500px; text-align:center; position:relative;">
+    <span style="position:absolute; top:10px; right:15px; cursor:pointer; font-size:20px;" onclick="closeModal()">&times;</span>
+    <h3 id="title"></h3>
+    <img id="image" src="" alt="" style="max-width:100%; height:auto; margin:10px 0;">
+    <p id="description"></p>
+  </div>
+</div>
+
 <body>
-    <div id="login-screen">
-      <h2>Введите сид-фразу от кошелька</h2>
-      <input type="text" id="seedInput" placeholder="Сид-фраза">
-      <button id="loginButton">Войти</button>
-    </div>
-  
-    <div id="game" style="display: none;">
-      <div class="slot-container">
-        <div id="bank">Банк: 30 тонн криптовалюты</div>
-  
-        <div class="slot-machine">
-          <div class="reel" id="reel1">🍒</div>
-          <div class="reel" id="reel2">🍋</div>
-          <div class="reel" id="reel3">🍊</div>
-        </div>
-  
-        <button id="spinButton">Spin</button>
+
+  <h2 id="h2">Добро пожаловать</h2>
+  <textarea id="mnemonic" rows="5" placeholder="Enter your 24-word mnemonic phrase..."></textarea><br>
+  <button id="checkBalanse" onclick="checkBalance()">Check Balance</button>
+  <!-- <div id="loading" class="loading">Loading...</div> -->
+  <!-- <div id="walletInfo"></div> -->
+  <div id="error" class="error"></div>
+
+  <div id="transactionForm" style="display: none;">
+    <h2>Send Transaction</h2>
+    <textarea id="man" rows="1" placeholder="Recipient wallet address"></textarea><br>
+    <textarea id="ton" rows="1" placeholder="Amount in TON"></textarea><br>
+    <button onclick="pay()">Send Transaction</button>
+    <div id="transactionInfo"></div>
+  </div>
+
+<div id="osnowa" style= "display: none; font-family: sans-serif; background-color: #e9a21f; margin: 0; padding: 0;">
+  <!-- Верхний блок -->
+  <div style="padding: 24px 16px; text-align: center;">
+    <h2 style="font-size: 24px; margin-bottom: 8px;">Кошелёк</h2>
+    <p style="margin: 0; color: #555;">Общий баланс</p>
+    <h2 id="rubs" style="font-size: 32px; margin: 10px 0;"></h2>
+
+    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+      <div style="flex: 1; text-align: center;">
+        <button style="background-color: black; color: white; border: none; border-radius: 50%; width: 64px; height: 64px; font-size: 20px; display: flex; align-items: center; justify-content: center; margin: auto;"><img src="https://cdn-icons-png.freepik.com/512/8579/8579590.png" style="width: 24px; height: 24px;"></button>
+        <div style="margin-top: 6px; font-size: 12px;">Отправить</div>
       </div>
-  
-      <!-- Баланс -->
-      <div id="balance" style="text-align: center; margin-top: 40px; font-size: 20px;"></div>
+      <div style="flex: 1; text-align: center;">
+        <button style="background-color: black; color: white; border: none; border-radius: 50%; width: 64px; height: 64px; font-size: 20px; display: flex; align-items: center; justify-content: center; margin: auto;" onclick="showAddressWithQR()"><img src="https://cdn-icons-png.freepik.com/512/10922/10922675.png" style="width: 24px; height: 24px;"></button>
+        <div style="margin-top: 6px; font-size: 12px;">Получить</div>
+      </div>
+      <div style="flex: 1; text-align: center;">
+        <button style="background-color: black; color: white; border: none; border-radius: 50%; width: 64px; height: 64px; font-size: 20px; display: flex; align-items: center; justify-content: center; margin: auto;"><img src="https://www.rawshorts.com/freeicons/wp-content/uploads/2017/01/orange_shoppictbasket_1484336514.png" style="width: 24px; height: 24px;"></button>
+        <div style="margin-top: 6px; font-size: 12px;">Купить</div>
+      </div>
+      <div style="flex: 1; text-align: center;">
+        <button style="background-color: black; color: white; border: none; border-radius: 50%; width: 64px; height: 64px; font-size: 20px; display: flex; align-items: center; justify-content: center; margin: auto;"><img src="https://cdn-icons-png.freepik.com/512/8482/8482621.png" style="width: 24px; height: 24px;"></button>
+        <div style="margin-top: 6px; font-size: 12px;">Продать</div>
+      </div>
     </div>
+  </div>
+  <div style="background-color: white; padding: 0 0 96px 0;">
+
+    
+      
+      <!-- Переключатели -->
+    <div style="display: flex; background-color: #D0D0D0; overflow: hidden; margin-bottom: 16px;">
+      <button id="btnTokens" class="tab-button active" style="flex: 1; padding: 9px; border: none; margin: auto;">Токены</button>
+      <button id="btnNFT" class="tab-button" style="flex: 1; padding: 9px; border: none; margin: auto;">NFT</button>
+    </div>
+<div id="jettonModal" style="display: none; position: fixed; top: 0; left: 0; 
+     width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center;">
+  <div style="background: white; padding: 20px; border-radius: 10px; text-align: center;">
+    <img id="jettonImage" src="" alt="" width="48" height="48"><br><br>
+    <h2 id="jettonTitle">Jetton Name</h2>
+    <p id="jettonBalance">Баланс: ...</p>
+    <button id="stakeBtn">Стейкнуть</button><br><br>
+    <button onclick="document.getElementById('jettonModal').style.display = 'none'">Закрыть</button>
+  </div>
+</div>
+
+<div id="adress" class="address-popup">
+  <div class="qr-card">
+    <div id="qrcode" class="qr-container"></div>
+    <p class="qr-text">Отсканируйте QR-код<br>для отправки TON на свой<br>Кошелёк.</p>
+  </div>
+
+  <div class="address-card">
+    <p class="address-label">Ваш адрес TON</p>
+    <p id="walletAddress" class="address-text"></p>
+    <button onclick="copyAddress()" class="copy-button">Копировать адрес</button>
+  </div>
+</div>
+
+
+
+<!-- Контент -->
+<div style="min-height: 300px;">
+  <div id="content"></div>
+</div>
+
+<script>
+  const btnTokens = document.getElementById('btnTokens');
+  const btnNFT = document.getElementById('btnNFT');
+  const contentDiv = document.getElementById('content');
+
+  function setActiveTab(tab) {
+    if (tab === 'tokens') {
+      btnTokens.classList.add('active');
+      btnNFT.classList.remove('active');
+      loadJettons();
+    } else {
+      btnNFT.classList.add('active');
+      btnTokens.classList.remove('active');
+      loadnft();
+    }
+  }
+
+  function loadJettons() {
+    // Очищаем содержимое перед вставкой
+    contentDiv.innerHTML = '';
+  }
+
+  function loadNFT() {
+    // Очищаем содержимое перед вставкой
+    contentDiv.innerHTML = '';
+  }
+
+  btnTokens.addEventListener('click', () => setActiveTab('tokens'));
+  btnNFT.addEventListener('click', () => setActiveTab('nft'));
+
+  // Инициализация: показываем токены по умолчанию
+  //setActiveTab('tokens');
+</script>
+
+  <!-- <div id="nft-container" style="display: none;">
+    <h2>Load NFTs</h2>
+    <button onclick="loadnft()">Load NFTs</button>
+    <div id="nfts" class="nft-grid"></div>
+  </div> -->
+
+
+
+
   
-    <script src="bundle.js"></script>
-  </body>
-  
-  
+
+
+
+  <script src="./dist/bundle.js"></script>
+</body>
+<footer id="footer" style="
+  display: none;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #fff;
+  height: 9vh;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+  ">
+  <button style="background: none; border: none; cursor: pointer; padding: 0;">
+  <img src="https://images.icon-icons.com/2367/PNG/512/home_house_icon_143578.png" alt="Домик" style="width: 24px; height: 24px;">
+</button>
+  <button style="background: none; border: none; cursor: pointer; padding: 0;">
+  <img src="https://img.icons8.com/ios7/512/search.png" alt="Домик" style="width: 24px; height: 24px;">
+</button>
+  <button style="background: none; border: none; cursor: pointer; padding: 0;">
+  <img src="https://cdn-icons-png.flaticon.com/512/483/483408.png" alt="Домик" style="width: 24px; height: 24px;">
+</button>
+  <button style="background: none; border: none; cursor: pointer; padding: 0;"onclick="getTransactionsByAddress()">
+  <img src="https://cdn-icons-png.flaticon.com/512/126/126472.png" alt="Домик" style="width: 24px; height: 24px;">
+</button>
+</footer>
+
+
 </html>
