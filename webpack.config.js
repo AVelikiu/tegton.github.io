@@ -33,7 +33,7 @@ module.exports = {
       Buffer: ["buffer", "Buffer"],
     }),
     new HtmlWebpackPlugin({
-      template: "./index.html",
+      template: "./src/index.html",
     }),
   ],
   mode: "development",
